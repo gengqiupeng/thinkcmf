@@ -122,6 +122,7 @@ class ComposerStaticInit5bfecc6fb5e853e2f790c7db297fb8ee
         'CallbackParameterToReference' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
         'CallbackReturnReference' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
         'CallbackReturnValue' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'DOMDocumentWrapper' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/DOMDocumentWrapper.php',
         'DOMEvent' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/DOMEvent.php',
         'ICallbackNamed' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
@@ -137,6 +138,7 @@ class ComposerStaticInit5bfecc6fb5e853e2f790c7db297fb8ee
         'phpQueryPlugins' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery.php',
         'think\\App' => __DIR__ . '/..' . '/thinkcmf/cmf/src/App.php',
         'think\\Log' => __DIR__ . '/..' . '/thinkcmf/cmf/src/Log.php',
+        'think\\facade\\Db' => __DIR__ . '/..' . '/thinkcmf/cmf/src/facade/Db.php',
         'think\\route\\dispatch\\Module' => __DIR__ . '/..' . '/thinkcmf/cmf/src/route/dispatch/Module.php',
     );
 

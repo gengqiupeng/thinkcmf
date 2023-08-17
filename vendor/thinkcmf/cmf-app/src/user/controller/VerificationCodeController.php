@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkCMF [ WE CAN DO IT MORE SIMPLE ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2013-2019 http://www.thinkcmf.com All rights reserved.
+// | Copyright (c) 2013-present http://www.thinkcmf.com All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -17,6 +17,9 @@ class VerificationCodeController extends HomeBaseController
 {
     public function send()
     {
+        if (!$this->request->isPost()) {
+            $this->error('非法请求！');
+        }
         $validate = new \think\Validate([
             'username' => 'require',
             'captcha'  => 'require',
@@ -83,7 +86,7 @@ class VerificationCodeController extends HomeBaseController
             $username = empty($user['user_nickname']) ? $user['user_login'] : $user['user_nickname'];
 
             $message = htmlspecialchars_decode($emailTemplate['template']);
-            $message = $this->display($message, ['code' => $code, 'username' => $username]);
+            $message = $this->view->display($message, ['code' => $code, 'username' => $username]);
             $subject = empty($emailTemplate['subject']) ? 'ThinkCMF验证码' : $emailTemplate['subject'];
             $result  = cmf_send_email($data['username'], $subject, $message);
 

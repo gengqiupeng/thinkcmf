@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkCMF [ WE CAN DO IT MORE SIMPLE ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2013-2019 http://www.thinkcmf.com All rights reserved.
+// | Copyright (c) 2013-present http://www.thinkcmf.com All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -11,7 +11,8 @@
 
 namespace app\admin\logic;
 
-use think\Db;
+use app\admin\model\AdminMenuModel;
+use app\admin\model\AuthRuleModel;
 use think\facade\Env;
 use mindplay\annotations\Annotations;
 
@@ -36,8 +37,22 @@ class MenuLogic
         $annotationManager->registry['adminMenuRoot'] = 'app\admin\annotation\AdminMenuRootAnnotation';
 
         $newMenus = [];
+        $registry = config('annotation.registry');
+
+        if (empty($registry)) {
+            $registry = ['date', 'email'];
+        }
+
+        foreach ($registry as $key => $value) {
+            if (is_numeric($key)) {
+                $annotationManager->registry[$value] = false;
+            } else {
+                $annotationManager->registry[$key] = $value;
+            }
+        }
+
         if ($app == 'admin') {
-            $filePatten         = Env::get('root_path') . "vendor/thinkcmf/cmf-app/src/{$app}/controller/*Controller.php";
+            $filePatten         = CMF_ROOT . "vendor/thinkcmf/cmf-app/src/{$app}/controller/*Controller.php";
             $coreAppControllers = cmf_scan_dir($filePatten);
 
             $filePatten  = APP_PATH . $app . '/controller/*Controller.php';
@@ -45,7 +60,7 @@ class MenuLogic
 
             $controllers = array_merge($coreAppControllers, $controllers);
         } else if ($app == 'user') {
-            $filePatten         = Env::get('root_path') . "vendor/thinkcmf/cmf-app/src/{$app}/controller/Admin*Controller.php";
+            $filePatten         = CMF_ROOT . "vendor/thinkcmf/cmf-app/src/{$app}/controller/Admin*Controller.php";
             $coreAppControllers = cmf_scan_dir($filePatten);
 
             $filePatten  = APP_PATH . $app . '/controller/Admin*Controller.php';
@@ -61,7 +76,7 @@ class MenuLogic
         if (!empty($controllers)) {
             foreach ($controllers as $controller) {
                 $controller      = preg_replace('/\.php$/', '', $controller);
-                $controllerName  = preg_replace('/\Controller$/', '', $controller);
+                $controllerName  = preg_replace("/Controller$/", '', $controller);
                 $controllerClass = "app\\$app\\controller\\$controller";
 
                 $menuAnnotations = Annotations::ofClass($controllerClass, '@adminMenuRoot');
@@ -107,14 +122,14 @@ class MenuLogic
                                     break;
                             }
 
-                            $findParentAdminMenu = Db::name('admin_menu')->where([
+                            $findParentAdminMenu = AdminMenuModel::where([
                                 'app'        => $parentApp,
                                 'controller' => $parentController,
                                 'action'     => $parentAction
                             ])->find();
 
                             if (empty($findParentAdminMenu)) {
-                                $parentId = Db::name('admin_menu')->insertGetId([
+                                $parentId = AdminMenuModel::insertGetId([
                                     'app'        => $parentApp,
                                     'controller' => $parentController,
                                     'action'     => $parentAction,
@@ -125,7 +140,7 @@ class MenuLogic
                             }
                         }
 
-                        $findAdminMenu = Db::name('admin_menu')->where([
+                        $findAdminMenu = AdminMenuModel::where([
                             'app'        => $app,
                             'controller' => $controllerName,
                             'action'     => $action
@@ -133,7 +148,7 @@ class MenuLogic
 
                         if (empty($findAdminMenu)) {
 
-                            Db::name('admin_menu')->insert([
+                            AdminMenuModel::insert([
                                 'parent_id'  => $parentId,
                                 'type'       => $type,
                                 'status'     => $status,
@@ -154,7 +169,7 @@ class MenuLogic
                         } else {
 
                             if ($findAdminMenu['name'] == '--new--') {
-                                Db::name('admin_menu')->where([
+                                AdminMenuModel::where([
                                     'app'        => $app,
                                     'controller' => $controllerName,
                                     'action'     => $action
@@ -171,7 +186,7 @@ class MenuLogic
                                 $menuName = $name;
                             } else {
                                 // 只关注菜单层级关系,是否有视图
-                                Db::name('admin_menu')->where([
+                                AdminMenuModel::where([
                                     'app'        => $app,
                                     'controller' => $controllerName,
                                     'action'     => $action
@@ -186,14 +201,14 @@ class MenuLogic
                         }
 
                         $authRuleName      = "{$app}/{$controllerName}/{$action}";
-                        $findAuthRuleCount = Db::name('auth_rule')->where([
+                        $findAuthRuleCount = AuthRuleModel::where([
                             'app'  => $app,
                             'name' => $authRuleName,
                             'type' => 'admin_url'
                         ])->count();
 
                         if ($findAuthRuleCount == 0) {
-                            Db::name('auth_rule')->insert([
+                            AuthRuleModel::insert([
                                 'app'   => $app,
                                 'name'  => $authRuleName,
                                 'type'  => 'admin_url',
@@ -201,7 +216,7 @@ class MenuLogic
                                 'title' => $menuName
                             ]);
                         } else {
-                            Db::name('auth_rule')->where([
+                            AuthRuleModel::where([
                                 'app'  => $app,
                                 'name' => $authRuleName,
                                 'type' => 'admin_url',
@@ -264,14 +279,14 @@ class MenuLogic
                                             break;
                                     }
 
-                                    $findParentAdminMenu = Db::name('admin_menu')->where([
+                                    $findParentAdminMenu = AdminMenuModel::where([
                                         'app'        => $parentApp,
                                         'controller' => $parentController,
                                         'action'     => $parentAction
                                     ])->find();
 
                                     if (empty($findParentAdminMenu)) {
-                                        $parentId = Db::name('admin_menu')->insertGetId([
+                                        $parentId = AdminMenuModel::insertGetId([
                                             'app'        => $parentApp,
                                             'controller' => $parentController,
                                             'action'     => $parentAction,
@@ -282,7 +297,7 @@ class MenuLogic
                                     }
                                 }
 
-                                $findAdminMenu = Db::name('admin_menu')->where([
+                                $findAdminMenu = AdminMenuModel::where([
                                     'app'        => $app,
                                     'controller' => $controllerName,
                                     'action'     => $action
@@ -290,7 +305,7 @@ class MenuLogic
 
                                 if (empty($findAdminMenu)) {
 
-                                    Db::name('admin_menu')->insert([
+                                    AdminMenuModel::insert([
                                         'parent_id'  => $parentId,
                                         'type'       => $type,
                                         'status'     => $status,
@@ -310,7 +325,7 @@ class MenuLogic
 
                                 } else {
                                     if ($findAdminMenu['name'] == '--new--') {
-                                        Db::name('admin_menu')->where([
+                                        AdminMenuModel::where([
                                             'app'        => $app,
                                             'controller' => $controllerName,
                                             'action'     => $action
@@ -327,7 +342,7 @@ class MenuLogic
                                         $menuName = $name;
                                     } else {
                                         // 只关注菜单层级关系,是否有视图
-                                        Db::name('admin_menu')->where([
+                                        AdminMenuModel::where([
                                             'app'        => $app,
                                             'controller' => $controllerName,
                                             'action'     => $action
@@ -343,14 +358,14 @@ class MenuLogic
                                 }
 
                                 $authRuleName      = "{$app}/{$controllerName}/{$action}";
-                                $findAuthRuleCount = Db::name('auth_rule')->where([
+                                $findAuthRuleCount = AuthRuleModel::where([
                                     'app'  => $app,
                                     'name' => $authRuleName,
                                     'type' => 'admin_url'
                                 ])->count();
 
                                 if ($findAuthRuleCount == 0) {
-                                    Db::name('auth_rule')->insert([
+                                    AuthRuleModel::insert([
                                         'app'   => $app,
                                         'name'  => $authRuleName,
                                         'type'  => 'admin_url',
@@ -358,7 +373,7 @@ class MenuLogic
                                         'title' => $menuName
                                     ]);
                                 } else {
-                                    Db::name('auth_rule')->where([
+                                    AuthRuleModel::where([
                                         'app'  => $app,
                                         'name' => $authRuleName,
                                         'type' => 'admin_url',

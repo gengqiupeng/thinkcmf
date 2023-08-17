@@ -1,5 +1,13 @@
-ThinkCMF 5.1.2 让你更自由地飞
+ThinkCMF 5.1.7 让你更自由地飞
 ===============
+
+### ThinkCMF 6.0已发布，推荐所有用户使用
+仓库地址如下：
+1. 码云:https://gitee.com/thinkcmf/ThinkCMF/tree/6.0 主要仓库
+2. GitHub:https://github.com/thinkcmf/thinkcmf/tree/6.0 国际镜像
+
+### 如何保证代码同时兼容5.1和6.0?
+https://www.thinkcmf.com/topic/10455.html
 
 ### 系列讲座
 https://www.thinkcmf.com/college.html
@@ -32,8 +40,8 @@ http://www.kancloud.cn/thinkcmf/doc5_1
 
 ### Git仓库
 
-1. GitHub:https://github.com/thinkcmf/thinkcmf 主要仓库
-2. 码云:https://gitee.com/thinkcmf/ThinkCMF 中国镜像
+1. 码云:https://gitee.com/thinkcmf/ThinkCMF 主要仓库
+2. GitHub:https://github.com/thinkcmf/thinkcmf 国际镜像
 
 ### 演示仓库
 此仓库会放官方的一些演示应用，插件，模板，API等 
@@ -41,9 +49,9 @@ http://www.kancloud.cn/thinkcmf/doc5_1
 2. https://gitee.com/thinkcmf/demos 中国镜像
 
 ### 环境推荐
-> php7.1
+> php7.3
 
-> mysql 5.6+
+> mysql 5.7+
 
 > 打开rewrite
 
@@ -135,6 +143,50 @@ http://www.thinkcmf.com/topic/index/index/cat/11.html
 https://github.com/thinkcmf/thinkcmf/issues
 
 ### 更新日志
+#### 5.1.7
+* 重构回收站代码，添加全部删除、一键清空和全部还原功能
+* 增加插件url美化
+* 增加默认过滤器
+* 增加插件未安装、未启用时禁止访问
+* 增加`think\facade\Db`类
+* 优化语言包加载顺序
+* 优化前端组件
+* 优化cmf版本获取
+* 优化`cmf_clear_cache()`函数
+* 修复用户行为产生积分或金币为空还有日志问题
+* 修复管理员编辑报错
+* 规范所有数据库操作用法
+
+
+#### 5.1.6
+* 修复插件后台权限认证问题
+* 升级到tp5.1.40
+* 优化后台管理添加和编辑
+* 删除phpquery类jqueryServer目录
+* 优化后台管理员新增和编辑
+* 优化语言包加载顺序
+
+#### 5.1.5
+* 升级到tp5.1.39
+* 增加模板设计数组列表图片显示
+* 优化前台基类
+* 取消路由排序限制
+
+#### 5.1.4
+* 优化上传逻辑，已传文件更新文件名
+* 优化系统钩子初始化
+* 修复编辑器锚点处理错误
+* 修复部分系统函数判断问题
+* 修复tp5.1.38前台控制器报错
+* 修复tp5.1.38下邮件验证码发不出
+
+#### 5.1.3
+* 增加`CMF_DATA`常量（注意升级）
+* 增加插件路由功能
+* 增加插件URL美化功能
+* 修复app_init钩子引起的命令行报错
+* 修复API中文件url转化错误
+
 #### 5.1.2
 [核心]
 * 升级tp到`5.1.37`

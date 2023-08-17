@@ -12,6 +12,7 @@ return array(
     'CallbackParameterToReference' => $vendorDir . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
     'CallbackReturnReference' => $vendorDir . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
     'CallbackReturnValue' => $vendorDir . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'DOMDocumentWrapper' => $vendorDir . '/electrolinux/phpquery/phpQuery/phpQuery/DOMDocumentWrapper.php',
     'DOMEvent' => $vendorDir . '/electrolinux/phpquery/phpQuery/phpQuery/DOMEvent.php',
     'ICallbackNamed' => $vendorDir . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
@@ -27,5 +28,6 @@ return array(
     'phpQueryPlugins' => $vendorDir . '/electrolinux/phpquery/phpQuery/phpQuery.php',
     'think\\App' => $vendorDir . '/thinkcmf/cmf/src/App.php',
     'think\\Log' => $vendorDir . '/thinkcmf/cmf/src/Log.php',
+    'think\\facade\\Db' => $vendorDir . '/thinkcmf/cmf/src/facade/Db.php',
     'think\\route\\dispatch\\Module' => $vendorDir . '/thinkcmf/cmf/src/route/dispatch/Module.php',
 );

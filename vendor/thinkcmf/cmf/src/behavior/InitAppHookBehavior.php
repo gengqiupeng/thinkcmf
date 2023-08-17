@@ -2,7 +2,7 @@
 // +---------------------------------------------------------------------
 // | ThinkCMF [ WE CAN DO IT MORE SIMPLE ]
 // +---------------------------------------------------------------------
-// | Copyright (c) 2013-2019 http://www.thinkcmf.com All rights reserved.
+// | Copyright (c) 2013-present http://www.thinkcmf.com All rights reserved.
 // +---------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +---------------------------------------------------------------------
@@ -10,6 +10,8 @@
 // +---------------------------------------------------------------------
 namespace cmf\behavior;
 
+use cmf\model\HookModel;
+use cmf\model\HookPluginModel;
 use think\Db;
 use think\facade\Hook;
 
@@ -43,9 +45,9 @@ class InitAppHookBehavior
         $appHookPlugins         = cache($appHookPluginsCacheKey);
 
         if (empty($appHookPlugins)) {
-            $appHooks = Db::name('hook')->where('app', $app)->column('hook');
+            $appHooks = HookModel::where('app', $app)->column('hook');
 
-            $appHookPlugins = Db::name('hook_plugin')->field('hook,plugin')->where('status', 1)
+            $appHookPlugins = HookPluginModel::field('hook,plugin')->where('status', 1)
                 ->where('hook', 'in', $appHooks)
                 ->order('list_order ASC')
                 ->select();

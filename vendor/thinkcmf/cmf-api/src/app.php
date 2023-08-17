@@ -40,7 +40,7 @@ return [
     // 是否开启多语言
     'lang_switch_on'         => false,
     // 默认全局过滤方法 用逗号分隔多个
-    'default_filter'         => '',
+    'default_filter'         => 'htmlspecialchars',
     // 默认语言
     'default_lang'           => 'zh-cn',
     // 应用类库后缀
@@ -53,7 +53,7 @@ return [
     // +----------------------------------------------------------------------
 
     // 默认模块名
-    'default_module'         => 'home',
+    'default_module'         => 'portal',
     // 禁止访问模块
     'deny_module_list'       => ['common'],
     // 默认控制器名

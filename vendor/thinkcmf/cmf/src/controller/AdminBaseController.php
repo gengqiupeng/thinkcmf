@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkCMF [ WE CAN DO IT MORE SIMPLE ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2013-2019 http://www.thinkcmf.com All rights reserved.
+// | Copyright (c) 2013-present http://www.thinkcmf.com All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +---------------------------------------------------------------------
@@ -10,6 +10,7 @@
 // +----------------------------------------------------------------------
 namespace cmf\controller;
 
+use cmf\model\UserModel;
 use think\Db;
 
 class AdminBaseController extends BaseController
@@ -22,7 +23,7 @@ class AdminBaseController extends BaseController
         parent::initialize();
         $sessionAdminId = session('ADMIN_ID');
         if (!empty($sessionAdminId)) {
-            $user = Db::name('user')->where('id', $sessionAdminId)->find();
+            $user = UserModel::where('id', $sessionAdminId)->find();
 
             if (!$this->checkAccess($sessionAdminId)) {
                 $this->error("您没有访问权限！");
@@ -88,10 +89,10 @@ class AdminBaseController extends BaseController
             return true;
         }
 
-        $module     = $this->request->module();
+        $app     = $this->request->module();
         $controller = $this->request->controller();
         $action     = $this->request->action();
-        $rule       = $module . $controller . $action;
+        $rule       = $app . $controller . $action;
 
         $notRequire = ["adminIndexindex", "adminMainindex"];
         if (!in_array($rule, $notRequire)) {

@@ -2,7 +2,7 @@
 // +---------------------------------------------------------------------
 // | ThinkCMF [ WE CAN DO IT MORE SIMPLE ]
 // +---------------------------------------------------------------------
-// | Copyright (c) 2013-2014 http://www.thinkcmf.com All rights reserved.
+// | Copyright (c) 2013-present http://www.thinkcmf.com All rights reserved.
 // +---------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +---------------------------------------------------------------------
@@ -116,14 +116,20 @@ class Upload
         $strId      = $this->request->param("id");
         $strDate    = date('Ymd');
 
-        $adminId   = cmf_get_current_admin_id();
-        $userId    = cmf_get_current_user_id();
-        $userId    = empty($adminId) ? $userId : $adminId;
-        if(empty($userId)) {
-            $userId = Db::name('user_token')->where('token', $this->request->header('XX-Token'))->field('user_id,token')->value('user_id');
+        $adminId = cmf_get_current_admin_id();
+        $userId  = cmf_get_current_user_id();
+        $userId  = empty($adminId) ? $userId : $adminId;
+        if (empty($userId)) {
+
+            $token = $this->request->header('Authorization');
+            if (empty($token)) {
+                $token = $this->request->header('XX-Token');
+            }
+            
+            $userId = Db::name('user_token')->where('token', $token)->field('user_id,token')->value('user_id');
         }
         $targetDir = Env::get('runtime_path') . "upload" . DIRECTORY_SEPARATOR . $userId . DIRECTORY_SEPARATOR; // 断点续传 need
-        if (!file_exists($targetDir)) {
+        if (!is_dir($targetDir)) {
             mkdir($targetDir, 0777, true);
         }
 
@@ -259,7 +265,13 @@ class Upload
 
         //  $url=$first['url'];
         $storageSetting = cmf_get_cmf_settings('storage');
-        $qiniuSetting   = $storageSetting['Qiniu']['setting'];
+
+        if (is_array($storageSetting) && is_array($storageSetting['Qiniu']) && array_key_exists("setting",$storageSetting['Qiniu'])){
+            $qiniuSetting   = $storageSetting['Qiniu']['setting'];
+        }else{
+            $qiniuSetting   = "";
+
+        }
         //$url=preg_replace('/^https/', $qiniu_setting['protocol'], $url);
         //$url=preg_replace('/^http/', $qiniu_setting['protocol'], $url);
 
@@ -318,7 +330,12 @@ class Upload
 
         } else {
             $needUploadToRemoteStorage = true;
-            $assetModel->data($arrInfo)->allowField(true)->save();
+        }
+
+        if ($objAsset) {
+            $assetModel->where('id', $objAsset['id'])->update(['filename' => $arrInfo["filename"]]);
+        } else {
+            $assetModel->allowField(true)->save($arrInfo);
         }
 
         //删除临时文件

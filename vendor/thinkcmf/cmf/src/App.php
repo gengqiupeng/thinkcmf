@@ -20,7 +20,7 @@ use think\route\Dispatch;
  */
 class App extends Container
 {
-    const VERSION = '5.1.37 LTS';
+    const VERSION = '5.1.40 LTS';
 
     /**
      * 当前模块路径
@@ -274,9 +274,6 @@ class App extends Container
 
         // 路由初始化
         $this->routeInit();
-
-        // 监听app_init
-        $this->hook->listen('app_init');
     }
 
     /**
@@ -424,6 +421,9 @@ class App extends Container
             // 初始化应用
             $this->initialize();
 
+            // 监听app_init
+            $this->hook->listen('app_init');
+
             if ($this->bindModule) {
                 // 模块/控制器绑定
                 $this->route->bind($this->bindModule);
@@ -449,6 +449,7 @@ class App extends Container
             $routeInfo = $this->request->routeInfo();
             if (!empty($routeInfo['route']) && strpos($routeInfo['route'], '\cmf\controller\PluginController@index?') !== false) {
                 parse_str(str_replace('\cmf\controller\PluginController@index?', '', $routeInfo['route']), $routeParams);
+                $routeParams = array_merge($routeParams, $routeInfo['var']);
                 $this->request->withRoute($routeParams);
             }
 
